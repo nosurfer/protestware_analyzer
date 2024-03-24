@@ -7,7 +7,7 @@ import subprocess
 
 def download_pypi_package(package_name):
     try:
-        result = subprocess.run(['pip', 'install', package_name], capture_output=True, text=True)
+        result = subprocess.run(['pip', 'download', package_name], capture_output=True, text=True)
         print(f"Пакет успешно установлен, при помощи: {' '.join(result.args)}")
         print(f"Выполнена команда: {' '.join(result.args)}")
         

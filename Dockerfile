@@ -7,4 +7,4 @@ RUN apt install -y python3, git, npm
 
 
 # необходимые зависимости:
-# pip, npm, git
+# pip, npm, git, python
