@@ -2,23 +2,26 @@
 Программа установки пакетов
 '''
 
-import sys 
-import subprocess 
+import os 
+import sys
+import functions
 
-def download_pypi_package(package_name):
+def download_pypi_package(package_name, package_version):
+
+    if package_version:
+        command = f"pip3 install {package_name}=={package_version}"
+    else:
+        command = f"pip3 install {package_name}"
     try:
-        result = subprocess.run(['pip', 'download', package_name], capture_output=True, text=True)
-        print(f"Пакет успешно установлен, при помощи: {' '.join(result.args)}")
-        print(f"Выполнена команда: {' '.join(result.args)}")
+        print()
+        return_code = os.system(command)
         
-        if result.stdout:
-            print("Стандартный вывод:")
-            print(result.stdout)
+        if return_code == 0:
+            print(f"Пакет '{package_name}' успешно установлен.")
+        else:
+            functions.print_usage_message(package_name)
+            sys.exit(1)
         
-        if result.stderr:
-            print("Стандартная ошибка:")
-            print(result.stderr)
-    except:
-        pass
-
-    return result.returncode
+    except Exception as e:
+        functions.print_usage_message(e)
+        sys.exit(1)

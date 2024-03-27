@@ -1,40 +1,43 @@
 '''
 Основная программа исполнения
-
-команда выполнения
-python3 main.py -package_manager=<package_name> -package=<package_main> -package_version=<version> 
-
-package_manager {
-    pypi
-    npm
-    git
-}
 '''
 
 import sys
+import time
 import functions
 import package_analyzer
 import package_downloader
 
-
 def main(arguments: dict):
+    time.sleep(10)
     functions.print_greeting_message()
     functions.print_input_options(arguments)
-    print(arguments)
-    
+
+    functions.verification(arguments["package_manager"], arguments["package_name"])
+
     if arguments["package_manager"] == "pypi":
-        if (rescode := package_downloader.download_pypi_package(arguments["package"])) != 0:
-            functions.print_error_message(rescode)
-            sys.exit(rescode)
+        package_downloader.download_pypi_package(arguments["package_name"], arguments["package_version"])
+    elif arguments["package_manager"] == "npm":
+        pass
+    elif arguments["package_manager"] == "gem":
+        pass
+    elif arguments["package_manager"] == "maven":
+        pass
+    elif arguments["package_manager"] == "comproser":
+        pass
+    elif arguments["package_manager"] == "nuget":
+        pass
+    else:
+        functions.print_usage_message(f"неправильно указан пакетный менеджер {arguments['package_manager']}") 
+        sys.exit(1)
 
     functions.print_goodbye_message()
 
-
 if __name__ == "__main__":
-    if len(sys.argv[1:]) >= 2:
+    if len(sys.argv[1:]) >= 2 and len(sys.argv[1:]) % 2 == 0:
         options = {
             "package_manager": "",
-            "package": "",
+            "package_name": "",
             "package_version": "",
             "location": "Удалённое"
             }
@@ -43,17 +46,15 @@ if __name__ == "__main__":
             if option_value[0] == "-m":
                 options["package_manager"] = option_value[1]
             elif option_value[0] == "-p":
-                options["package"] = option_value[1]
+                options["package_name"] = option_value[1]
             elif option_value[0] == "-v":
                 options["package_version"] = option_value[1]
             elif option_value[0] == "-l":
                 options["location"] = option_value[1]
             else:
-                # дописать вывод
-                print(f"Некорректный ввод опции: {option_value[0]}, ознакомтесь с параметрами использования:\n > ...") 
+                functions.print_usage_message(option_value[0]) 
                 sys.exit(1)
         main(options)
     else:
-        # дописать вывод
-        print(f"Пустой ввод, ознакомтесь с параметрами использования:\n > ...")
+        functions.print_usage_message(sys.argv[1:])
         sys.exit(1)
