@@ -1,1 +1,0 @@
-# protestware_analyzer
